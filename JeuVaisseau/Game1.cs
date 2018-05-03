@@ -17,14 +17,13 @@ namespace JeuVaisseau
         GameObject[] tableauProjectile;
         GameObject vaisseau;
         GameObject background;
-        int i = 0;
+        int k = 0;
+
         public Game1()
         {
             graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
             GameObject.Content = Content;    //Accès du Content dans le gameobject.
-            
-            
 
         }
 
@@ -41,7 +40,6 @@ namespace JeuVaisseau
             base.Initialize();
             this.graphics.PreferredBackBufferWidth = graphics.GraphicsDevice.DisplayMode.Width;
             this.graphics.PreferredBackBufferHeight = graphics.GraphicsDevice.DisplayMode.Height;
-            
             this.graphics.ToggleFullScreen();
 
         }
@@ -56,14 +54,16 @@ namespace JeuVaisseau
 
             // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
+            GameObject.Spritebatch = spriteBatch;
 
             fenetre = graphics.GraphicsDevice.Viewport.Bounds;
             fenetre.Width = graphics.GraphicsDevice.DisplayMode.Width;
             fenetre.Height = graphics.GraphicsDevice.DisplayMode.Height;
             GameObject.Fenetre = fenetre;
+
             // TODO: use this.Content to load your game content here
 
-            vaisseau = new Vaisseau(3, 10, new Rectangle(0,0,150,150));
+            vaisseau = new Vaisseau(3, new Rectangle(800, 600, 150, 150), 10);
 
             background = new Background(new Rectangle(0, 0, fenetre.Width, fenetre.Height));
 
@@ -71,7 +71,7 @@ namespace JeuVaisseau
 
             for (int i = 0; i < tableauProjectile.Length; i++)
             {
-                tableauProjectile[i] = new Projectile(new Rectangle(de.Next(0, fenetre.Width),-500,de.Next(150,500), de.Next(150, 500)));
+                tableauProjectile[i] = new Projectile(new Rectangle(de.Next(0, fenetre.Width), -500, de.Next(150, 500), de.Next(150, 500)));
             }
         }
 
@@ -93,19 +93,21 @@ namespace JeuVaisseau
         {
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
-            
-            // TODO: Add your update logic here
 
+            // TODO: Add your update logic here
             vaisseau.Actualiser();
-            for (int j = 0; j <= i; j++)
+
+            for (int j = 0; j <= k; j++)
             {
                 tableauProjectile[j].Actualiser();
             }
-            
-            if (tableauProjectile[i].Position.Y > fenetre.Height/3)
+
+            if (tableauProjectile[k].Position.Y > fenetre.Height / 3)
             {
-                i++;
+                vaisseau.DetecterCollision(tableauProjectile[k]);
+                k++;
             }
+        
 
             base.Update(gameTime);
         }
@@ -119,16 +121,20 @@ namespace JeuVaisseau
             GraphicsDevice.Clear(Color.Yellow);
 
             // TODO: Add your drawing code here
-
             spriteBatch.Begin();
 
             background.Dessiner();
-            //vaisseau.Dessiner();
 
-            //for (int i = 0; i < tableauProjectile.Length; i++)
-            //{
-            //    tableauProjectile[i].Dessiner();
-            //}
+            if (vaisseau.DetecterCollision(tableauProjectile[k]) == false)
+            {
+                vaisseau.Dessiner();
+                
+            }
+
+            for (int i = 0; i < tableauProjectile.Length; i++)
+            {
+                tableauProjectile[i].Dessiner();
+            }
 
             spriteBatch.End();
 

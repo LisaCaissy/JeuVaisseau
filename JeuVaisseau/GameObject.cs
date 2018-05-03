@@ -21,7 +21,7 @@ namespace JeuVaisseau
         protected Texture2D sprite;
         protected Random random;
         protected static Rectangle fenetre;
-        protected  SpriteBatch spritebatch;
+        protected static SpriteBatch spritebatch;
         protected static ContentManager content;
 
         public static ContentManager Content
@@ -48,7 +48,7 @@ namespace JeuVaisseau
             }
         }
 
-        public SpriteBatch Spritebatch
+        public static SpriteBatch Spritebatch
         {
             get
             {
@@ -89,6 +89,18 @@ namespace JeuVaisseau
             }
         }
 
+        public bool EstVisible
+        {
+            get
+            {
+                return estVisible;
+            }
+            set
+            {
+                estVisible = value;
+            }
+        }
+
         /// <summary>
         /// Constructeur.
         /// </summary>
@@ -98,37 +110,26 @@ namespace JeuVaisseau
         }
 
         /// <summary>
-        /// Initialise un GameObject.
-        /// </summary>
-
-
-        /// <summary>
         /// Actualise les GameObjects.
         /// </summary>
         public abstract void Actualiser();
 
+        public bool DetecterCollision(GameObject element)
+        {
+            bool collision = false;
 
-        /// <summary>
-        /// 
-        /// </summary>
-        //public virtual void DetecterCollisions()
-        //{
-        //    if (rectangleVaisseau.Intersects(rectangleProjectile))
-        //    {
-        //        Vaisseau.Vie--;
-        //        if (Vaisseau.Vie == 0)
-        //        {
-        //            Vaisseau.estVisible = false;
-        //        }
-        //    }
-        //}
+            if (Position.Intersects(element.Position))
+            {
+                collision = true;          
+            }
+            return collision;
+        }
 
         /// <summary>
         /// Dessine les GameObjects.
         /// </summary>
         public void Dessiner()
         {
-
             spritebatch.Draw(sprite, position, Color.White);
 
         }

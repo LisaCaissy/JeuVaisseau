@@ -19,7 +19,7 @@ namespace JeuVaisseau
 
         public void Deplacements()
         {
-            position.Y -= 2;
+            
 
         }
 

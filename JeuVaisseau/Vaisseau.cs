@@ -17,43 +17,58 @@ namespace JeuVaisseau
     {
 
         protected int vie;
-        protected int munitions;
+        protected Munitions[] munitions;
+
+        public int Vie
+        {
+            get
+            { 
+                return vie;
+            }
+            set
+            {
+                vie = value;
+            }
+        }
 
         /// <summary>
         /// Constructeur.
         /// </summary>
-        public Vaisseau(int vie, int munitions, Rectangle position) : base(position)
+        public Vaisseau(int vie, Rectangle position, int nombre) : base(position)
         {
             this.vie = vie;
-            this.munitions = munitions;
             sprite = Content.Load<Texture2D>("vaisseau");           
-           //this.position = position;
             position = sprite.Bounds;
             vitesse = new Vector2(10,10);
-            Debug.WriteLine(position);
+            munitions = new Munitions[nombre];
+            for (int i = 0; i < munitions.Length; i++)
+            {
+                munitions[i] = new Munitions(position);
+            }
+
         }
 
         public void Deplacements()
         {
 
             //droite
-            if (Keyboard.GetState().IsKeyDown(Keys.D) && position.X <= fenetre.Width - sprite.Width)
+            if (Keyboard.GetState().IsKeyDown(Keys.Right) && position.X <= fenetre.Width - sprite.Width)
             {
                 
                 position.X += (int)vitesse.X;
             }
             //gauche
-            if (Keyboard.GetState().IsKeyDown(Keys.A) && position.X >= 0)
+            if (Keyboard.GetState().IsKeyDown(Keys.Left) && position.X >= 0)
             {
                 position.X -= (int)vitesse.X;
             }
             //haut
-            if (Keyboard.GetState().IsKeyDown(Keys.W) && position.Y >= 0)
+            if (Keyboard.GetState().IsKeyDown(Keys.Up) && position.Y >= 0)
             {
                 position.Y -= (int)vitesse.Y;
             }
             //bas
-            if (Keyboard.GetState().IsKeyDown(Keys.S) && position.Y <= fenetre.Height - sprite.Height)
+            if (Keyboard.GetState().IsKeyDown(Keys.Down) && position.Y <= fenetre.Height - sprite.Height)
             {
                 position.Y += (int)vitesse.Y;
             }
@@ -62,15 +77,11 @@ namespace JeuVaisseau
         public override void Actualiser()
         {
             Deplacements();
-            //LimiterMouvements();
+
+            for (int i = 0; i < munitions.Length; i++)
+            {
+                munitions[i].Actualiser();
+            }  
         }
-
-        /// <summary>
-        /// Limite les mouvements du vaisseau pour ne pas quitter l'écran.
-        /// </summary>
-
-        
-
-
     }
 }

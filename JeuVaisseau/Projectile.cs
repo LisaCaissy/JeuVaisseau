@@ -23,25 +23,19 @@ namespace JeuVaisseau
             this.position = position;
             estVisible = true;
             sprite = Content.Load<Texture2D>("asteroids");
-            vitesse = new Vector2(1, 20);
+            vitesse = new Vector2(1, 30);
         }
 
         public void Deplacements()
         {
-            
-            
-
 
             position.Y += (int)vitesse.Y;
 
         }
 
-
         public override void Actualiser()
         {
             Deplacements();
         }
-
-
     }
 }
